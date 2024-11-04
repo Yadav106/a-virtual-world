@@ -29,7 +29,7 @@ class GraphEditor {
   }
 
   #handleMouseMove(evt) {
-    this.mouse = this.viewport.getMouse(evt);
+    this.mouse = this.viewport.getMouse(evt, true);
     this.hovered = getNearestPoint(this.mouse, this.graph.points, 10 * this.viewport.zoom);
 
     if (this.dragging == true) {
@@ -50,7 +50,7 @@ class GraphEditor {
     }
 
     // left click
-    if (evt.button == 0) {
+    if ((evt.button == 0) && (evt.ctrlKey == false)) {
       this.mouse = this.viewport.getMouse(evt);
       if (this.hovered) {
         this.#select(this.hovered);
