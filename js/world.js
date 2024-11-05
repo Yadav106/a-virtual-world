@@ -10,8 +10,8 @@ class World {
     this.roadWidth = roadWidth;
     this.roadRoundness = roadRoundness;
     this.buildingWidth = buildingWidth;
-    this.buildingMinLength = buildingMinLength
-    this.spacing = spacing
+    this.buildingMinLength = buildingMinLength;
+    this.spacing = spacing;
 
     this.envelopes = [];
     this.roadBorders = [];
@@ -49,7 +49,7 @@ class World {
 
     for (let i = 0; i < guides.length; i++) {
       const seg = guides[i];
-      if (sef.length() < this.buildingMinLength) {
+      if (seg.length() < this.buildingMinLength) {
         guides.splice(i, 1);
         i--;
       }
