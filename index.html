@@ -16,7 +16,7 @@
       &nbsp;
       <button id="graphBtn" onclick="setMode('graph')">🌐</button>
       <button id="stopBtn" onclick="setMode('stop')">🛑</button>
-      <!-- <button id="yieldBtn" onclick="setMode('yield')">⚠️</button> -->
+      <button id="yieldBtn" onclick="setMode('yield')">⚠️</button>
       <button id="crossingBtn" onclick="setMode('crossing')">🚶</button>
       <button id="parkingBtn" onclick="setMode('parking')">🅿️</button>
       <button id="lightBtn" onclick="setMode('light')">🚦</button>
@@ -34,6 +34,7 @@
     <script src="js/markings/light.js"></script>
     <script src="js/markings/parking.js"></script>
     <script src="js/markings/target.js"></script>
+    <script src="js/markings/yield.js"></script>
 
     <script src="js/editors/markingEditor.js"></script>
     <script src="js/editors/crossingEditor.js"></script>
@@ -43,6 +44,7 @@
     <script src="js/editors/lightEditor.js"></script>
     <script src="js/editors/parkingEditor.js"></script>
     <script src="js/editors/targetEditor.js"></script>
+    <script src="js/editors/yieldEditor.js"></script>
 
     <script src="js/items/tree.js"></script>
     <script src="js/items/building.js"></script>
@@ -98,6 +100,10 @@
         target: {
           button: targetBtn,
           editor: new TargetEditor(viewport, world)
+        },
+        yield: {
+          button: yieldBtn,
+          editor: new YieldEditor(viewport, world)
         },
       };
 
