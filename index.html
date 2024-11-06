@@ -21,7 +21,7 @@
       <button id="parkingBtn" onclick="setMode('parking')">🅿️</button>
       <button id="lightBtn" onclick="setMode('light')">🚦</button>
       <button id="startBtn" onclick="setMode('start')">🚙</button>
-      <!-- <button id="targetBtn" onclick="setMode('target')">🎯</button> -->
+      <button id="targetBtn" onclick="setMode('target')">🎯</button>
     </div>
 
     <script src="js/world.js"></script>
@@ -33,6 +33,7 @@
     <script src="js/markings/start.js"></script>
     <script src="js/markings/light.js"></script>
     <script src="js/markings/parking.js"></script>
+    <script src="js/markings/target.js"></script>
 
     <script src="js/editors/markingEditor.js"></script>
     <script src="js/editors/crossingEditor.js"></script>
@@ -41,6 +42,7 @@
     <script src="js/editors/startEditor.js"></script>
     <script src="js/editors/lightEditor.js"></script>
     <script src="js/editors/parkingEditor.js"></script>
+    <script src="js/editors/targetEditor.js"></script>
 
     <script src="js/items/tree.js"></script>
     <script src="js/items/building.js"></script>
@@ -92,6 +94,10 @@
         parking: {
           button: parkingBtn,
           editor: new ParkingEditor(viewport, world)
+        },
+        target: {
+          button: targetBtn,
+          editor: new TargetEditor(viewport, world)
         },
       };
 
