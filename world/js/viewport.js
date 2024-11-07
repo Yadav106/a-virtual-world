@@ -19,7 +19,7 @@ class Viewport {
 
   reset() {
     this.ctx.restore();
-    this.ctx.clearRect(0, 0, this.canvas.width, myCanvas.height);
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.save();
     this.ctx.translate(this.center.x, this.center.y);
     this.ctx.scale(1 / this.zoom, 1 / this.zoom);
@@ -45,6 +45,8 @@ class Viewport {
     this.canvas.addEventListener("mousedown", this.#handleMouseDown.bind(this));
     this.canvas.addEventListener("mousemove", this.#handleMouseMove.bind(this));
     this.canvas.addEventListener("mouseup", this.#handleMouseUp.bind(this));
+    this.boundContextMenu = (evt) => { evt.preventDefault(); }
+    this.canvas.addEventListener("contextmenu", this.boundContextMenu);
   }
 
   #handleMouseWheel(evt) {
@@ -57,7 +59,7 @@ class Viewport {
 
   #handleMouseDown(evt) {
     // pressing button with control key
-    if ((evt.button == 0) && (evt.ctrlKey == true)) {
+    if (evt.button == 0) {
       this.drag.start = this.getMouse(evt);
       this.drag.active = true;
     }
