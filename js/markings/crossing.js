@@ -3,6 +3,7 @@ class Crossing extends Marking {
     super(center, directionVector, width, height)
 
     this.borders = [this.poly.segments[1], this.poly.segments[3]];
+    this.type = "crossing";
   }
 
   draw(ctx) {
