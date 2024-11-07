@@ -86,6 +86,10 @@ function lerp2D(A, B, t) {
   return new Point(lerp(A.x, B.x, t), lerp(A.y, B.y, t));
 }
 
+function invLerp(a, b, v) {
+  return (v - a) / (b - a);
+}
+
 function getIntersection(A,B,C,D){ 
   const tTop=(D.x-C.x)*(A.y-C.y)-(D.y-C.y)*(A.x-C.x);
   const uTop=(C.y-A.y)*(A.x-B.x)-(C.x-A.x)*(A.y-B.y);
@@ -118,4 +122,8 @@ function getFake3dPoint(point, viewPoint, height) {
    const dist = distance(point, viewPoint);
    const scaler = Math.atan(dist / 300) / (Math.PI / 2);
    return add(point, scale(dir, height * scaler));
+}
+
+function degToRad(angle) {
+  return angle * (Math.PI / 180);
 }

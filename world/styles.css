@@ -1,6 +1,7 @@
 body {
   background: black;
   text-align: center;
+  overflow: hidden;
 }
 
 h1 {
@@ -28,4 +29,13 @@ input[type="file"] {
 
 button:hover {
   background-color: #CCC;
+}
+
+#osmPanel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0,0,0,0.7);
+  padding: 5000px;
 }
