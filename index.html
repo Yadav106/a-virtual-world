@@ -22,6 +22,7 @@
       <button id="lightBtn" onclick="setMode('light')">🚦</button>
       <button id="startBtn" onclick="setMode('start')">🚙</button>
       <button id="targetBtn" onclick="setMode('target')">🎯</button>
+      <button id="panBtn" onclick="setMode('pan')">🗺️</button>
     </div>
 
     <script src="js/world.js"></script>
@@ -45,6 +46,7 @@
     <script src="js/editors/parkingEditor.js"></script>
     <script src="js/editors/targetEditor.js"></script>
     <script src="js/editors/yieldEditor.js"></script>
+    <script src="js/editors/panEditor.js"></script>
 
     <script src="js/items/tree.js"></script>
     <script src="js/items/building.js"></script>
@@ -104,6 +106,10 @@
         yield: {
           button: yieldBtn,
           editor: new YieldEditor(viewport, world)
+        },
+        pan: {
+          button: panBtn,
+          editor: new PanEditor(viewport, world)
         },
       };
 
