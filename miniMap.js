@@ -1,4 +1,8 @@
 class MiniMap {
+  /**
+ * @param {Graph} graph - An instance of the Graph class.
+ * @param {HTMLCanvasElement} canvas 
+ */
   constructor(canvas, graph, size) {
     this.canvas = canvas;
     this.graph = graph;
@@ -9,10 +13,16 @@ class MiniMap {
     this.ctx = canvas.getContext("2d");
   }
 
+  /**
+  * @param {Point} viewPoint 
+  */
   update(viewPoint) {
     this.ctx.clearRect(0, 0, this.size, this.size);
-    
+
     const scaler = 0.05;
+    /**
+      * @type {Point}
+      */
     const scaledViewPoint = scale(viewPoint, -scaler);
     this.ctx.save();
     this.ctx.translate(

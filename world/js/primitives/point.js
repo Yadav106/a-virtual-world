@@ -1,3 +1,8 @@
+/**
+ * Represents a Graph.
+ * @class
+ */
+
 class Point {
   constructor(x, y) {
     this.x = x;
