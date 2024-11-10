@@ -71,7 +71,7 @@ class World {
     this.laneGuides.push(...this.#generateLaneGuides());
   }
 
-  generateCorridor(start, end) {
+  generateCorridor(start, end, extendEnd = false) {
     const startSeg = getNearestSegment(start, this.graph.segments);
     const endSeg = getNearestSegment(end, this.graph.segments);
 
@@ -104,9 +104,24 @@ class World {
       segs.push(new Segment(path[i-1], path[i]));
     }
 
+    if (extendEnd) {
+      const lastSeg = segs[segs.length - 1];
+      const lastSegDir = lastSeg.directionVector();
+      segs.push(
+        new Segment(
+          lastSeg.p2,
+          add(lastSeg.p2, scale(lastSegDir, this.roadWidth))
+        )
+      );
+    }
+
     const tmpEnvelopes = segs.map(
       seg => new Envelope(seg, this.roadWidth, this.roadRoundness)
     );
+
+    if (extendEnd) {
+      segs.pop();
+    }
 
     const segments = Polygon.union(tmpEnvelopes.map(e => e.poly));
 

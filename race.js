@@ -44,7 +44,7 @@ let roadBorders = [];
 
 const target = world.markings.find(m => m instanceof Target);
 if (target) {
-  world.generateCorridor(myCar, target.center);
+  world.generateCorridor(myCar, target.center, true);
   roadBorders = world.corridor.borders.map(s => [s.p1, s.p2]);
 } else {
   roadBorders = world.roadBorders.map(s => [s.p1, s.p2]);
@@ -138,16 +138,21 @@ function updateCarProgress(car) {
 
 function startCounter() {
   counter.innerText = "3";
+  beep(400);
   setTimeout(() => {
     counter.innerText = "2";
+    beep(400);
     setTimeout(() => {
       counter.innerText = "1";
+      beep(400);
       setTimeout(() => {
         counter.innerText = "GO!!";
+        beep(700);
         setTimeout(() => {
           counter.innerText = "";
           started = true;
           frameCount = 0;
+          myCar.engine = new Engine();
         }, 1000);
       }, 1000);
     }, 1000);
