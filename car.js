@@ -1,3 +1,7 @@
+/**
+  * Represents a car
+  * @class
+  */
 class Car {
   constructor(x, y, width, height, controlType, angle=0, maxSpeed=3, color="blue") {
     this.x = x;
@@ -17,6 +21,9 @@ class Car {
     this.useBrain = controlType == "AI";
 
     if (controlType!="DUMMY") {
+      /**
+        * @type {Sensor}
+        */
       this.sensor = new Sensor(this);
       this.brain = new NeuralNetwork(
         [this.sensor.rayCount, 6, 4]
@@ -42,6 +49,17 @@ class Car {
     }
   }
 
+  load(info) {
+    this.brain = info.brain;
+    this.maxSpeed = info.maxSpeed;
+    this.friction = info.friction;
+    this.acceleration = info.acceleration;
+    this.sensor.rayCount = info.sensor.rayCount;
+    this.sensor.raySpread = info.sensor.raySpread;
+    this.sensor.rayLength = info.sensor.rayLength
+    this.sensor.rayOffset = info.sensor.rayOffset;
+  }
+
   update(roadBorders, traffic = []) {
     if (!this.damaged) {
       this.#move();
@@ -53,7 +71,7 @@ class Car {
       this.sensor.update(roadBorders, traffic);
       const offset = this.sensor.readings.map(
         s => (s == null) ? 0 : 1 - s.offset
-      );
+      ).concat([this.speed / this.maxSpeed]);
       const outputs = NeuralNetwork.feedForward(offset, this.brain);
 
       if (this.useBrain) {

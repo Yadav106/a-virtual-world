@@ -1,7 +1,9 @@
 class MiniMap {
   /**
+   * Represents a Mini Map
  * @param {Graph} graph - An instance of the Graph class.
  * @param {HTMLCanvasElement} canvas 
+ * @class
  */
   constructor(canvas, graph, size) {
     this.canvas = canvas;

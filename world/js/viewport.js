@@ -1,3 +1,7 @@
+/**
+  * Represents a Viewport
+  * @class
+  */
 class Viewport {
   constructor (canvas, zoom = 1, offset = null) {
     this.canvas = canvas;
@@ -59,7 +63,7 @@ class Viewport {
 
   #handleMouseDown(evt) {
     // pressing button with control key
-    if (evt.button == 0) {
+    if ((evt.button == 0) && (evt.ctrlKey == true)) {
       this.drag.start = this.getMouse(evt);
       this.drag.active = true;
     }
