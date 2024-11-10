@@ -36,3 +36,41 @@ button:hover {
 #miniMapCanvas {
   background: black;
 }
+
+.miniMap {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  border-radius: 50%;
+  opacity: 50%;
+}
+
+#statistics {
+  background: black;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  border-radius: 10px;
+  overflow-y: scroll;
+  opacity: 50%;
+}
+
+.stat {
+  font-size: xx-large;
+  font-family: Arial;
+  padding: 10px;
+}
+
+#counter {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 40vmin;
+  font-family: Arial;
+  opacity: 50%;
+  color: white;
+  text-shadow: 0 0 9px #FF0000, 0 0 5px #0000FF;
+}
+
+
