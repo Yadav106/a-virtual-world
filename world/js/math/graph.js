@@ -93,6 +93,7 @@ class Graph {
         }
       }
     }
+    return segs
   }
 
   getShortestPath(start, end) {

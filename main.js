@@ -40,8 +40,15 @@ if (localStorage.getItem("bestBrain")) {
 }
 
 const traffic = [];
-const roadBorders = world.roadBorders
-.map(s => [s.p1, s.p2]);
+let roadBorders = [];
+
+const target = world.markings.find(m => m instanceof Target);
+if (target) {
+  world.generateCorridor(bestCar, target.center);
+  roadBorders = world.corridor.map(s => [s.p1, s.p2]);
+} else {
+  roadBorders = world.roadBorders.map(s => [s.p1, s.p2]);
+}
 
 animate();
 

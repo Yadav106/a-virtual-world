@@ -1,4 +1,7 @@
 class World {
+  /**
+  * @param {Graph} graph - A type of graph
+  */
   constructor (graph, 
     roadWidth = 100, 
     roadRoundness = 10,
@@ -66,6 +69,48 @@ class World {
 
     this.laneGuides.length = 0;
     this.laneGuides.push(...this.#generateLaneGuides());
+  }
+
+  generateCorridor(start, end) {
+    const startSeg = getNearestSegment(start, this.graph.segments);
+    const endSeg = getNearestSegment(end, this.graph.segments);
+
+    const {point: projStart} = startSeg.projectPoint(start);
+    const {point: projEnd} = endSeg.projectPoint(end);
+
+    this.graph.points.push(projStart);
+    this.graph.points.push(projEnd);
+
+    const tmpSegs = [
+      new Segment(startSeg.p1, projStart),
+      new Segment(projStart, startSeg.p2),
+      new Segment(endSeg.p1, projEnd),
+      new Segment(projEnd, endSeg.p2),
+    ];
+
+    if (startSeg.equals(endSeg)) {
+      tmpSegs.push(new Segment(projStart, projEnd));
+    }
+
+    this.graph.segments = this.graph.segments.concat(tmpSegs);
+
+    const path = this.graph.getShortestPath(projStart, projEnd);
+
+    this.graph.removePoint(projStart);
+    this.graph.removePoint(projEnd);
+
+    const segs = [];
+    for (let i = 1; i < path.length; i++) {
+      segs.push(new Segment(path[i-1], path[i]));
+    }
+
+    const tmpEnvelopes = segs.map(
+      seg => new Envelope(seg, this.roadWidth, this.roadRoundness)
+    );
+
+    const segments = Polygon.union(tmpEnvelopes.map(e => e.poly));
+
+    this.corridor = segments;
   }
 
   #generateLaneGuides() {
@@ -288,6 +333,12 @@ class World {
 
     for (const seg of this.roadBorders) {
       seg.draw(ctx, { color: "white", width: 4 });
+    }
+
+    if (this.corridor) {
+      for (const seg of this.corridor) {
+        seg.draw(ctx, { color: "red", width: 4 });
+      }
     }
 
     ctx.globalAlpha = 0.2;
