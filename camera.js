@@ -2,15 +2,45 @@
   * @class A class to represent camera which moves in the virtual world
   */
 class Camera {
-  constructor({ x, y, angle }, range = 1000) {
+  constructor({ x, y, angle }, range = 1000, distanceBehind = 90) {
     this.range = range;
-    this.move({ x, y, angle });
+    this.distanceBehind = distanceBehind;
+    this.moveSimple({ x, y, angle });
   }
 
   move({ x, y, angle }) {
-    this.x = x;
-    this.y = y;
-    this.z = -20;
+    const t = 0.1;
+    this.x = lerp(this.x, x + this.distanceBehind * Math.sin(angle), t);
+    this.y = lerp(this.y, y + this.distanceBehind * Math.cos(angle), t);
+    this.z = -20 - 10;
+    this.angle = lerp(this.angle, angle, t);
+    this.center = new Point(this.x, this.y);
+
+    this.tip = new Point(
+      this.x - this.range * Math.sin(this.angle),
+      this.y - this.range * Math.cos(this.angle)
+    );
+
+    this.left = new Point(
+      this.x - this.range * Math.sin(this.angle - Math.PI / 4),
+      this.y - this.range * Math.cos(this.angle - Math.PI / 4)
+    );
+
+    this.right = new Point(
+      this.x - this.range * Math.sin(this.angle + Math.PI / 4),
+      this.y - this.range * Math.cos(this.angle + Math.PI / 4)
+    );
+
+    this.poly = new Polygon(
+      [this.center, this.left, this.right]
+    );
+  }
+
+
+  moveSimple({ x, y, angle }) {
+    this.x = x + this.distanceBehind * Math.sin(angle);
+    this.y = y + this.distanceBehind * Math.cos(angle);
+    this.z = -20 - 10;
     this.angle = angle;
     this.center = new Point(this.x, this.y);
 
@@ -111,9 +141,9 @@ class Camera {
     );
 
     const carPolys = this.#extrude(
-      this.#filter(world.cars.map(c => 
-        new Polygon(c.polygon.map(p => new Point(p.x, p.y)))
-      )),
+      this.#filter( 
+        [new Polygon(world.bestCar.polygon.map(p => new Point(p.x, p.y)))]
+      ),
       10
     );
 
