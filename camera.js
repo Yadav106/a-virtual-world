@@ -274,8 +274,113 @@ class Camera {
       c_quarterBackRight
     ]));
 
-    return [...sides, ...ceilingParts];
+    const carAngle = Math.atan2(
+      frontLeft.y - backLeft.y,
+      frontLeft.x - backLeft.x
+    );
+
+    let frontWheelAngle = carAngle;
+    if (carInfo.controls.tilt) {
+       frontWheelAngle += carInfo.controls.tilt * 0.5;
+    } else {
+       if (carInfo.controls.left) {
+          frontWheelAngle -= 0.3;
+       }
+       if (carInfo.controls.right) {
+          frontWheelAngle += 0.3;
+       }
+    }
+
+    const frontWheelLeftPolys = this.#generateWheel(
+       quarterFrontLeft,
+       wheelRadius,
+       frontWheelAngle,
+       carInfo.fittness
+    );
+    const frontWheelRightPolys = this.#generateWheel(
+       quarterFrontRight,
+       wheelRadius,
+       frontWheelAngle,
+       carInfo.fittness
+    );
+    const backWheelLeftPolys = this.#generateWheel(
+       quarterBackLeft,
+       wheelRadius,
+       carAngle,
+       carInfo.fittness
+    );
+    const backWheelRightPolys = this.#generateWheel(
+       quarterBackRight,
+       wheelRadius,
+       carAngle,
+       carInfo.fittness
+    );
+
+    return [
+         ...frontWheelLeftPolys,
+         ...frontWheelRightPolys,
+         ...backWheelLeftPolys,
+         ...backWheelRightPolys,
+         ...sides, 
+         ...ceilingParts
+      ];
   }
+
+  #generateWheel(center, radius, angle, distance = 0, thickness = 4) {
+    const center1 = new Point(
+      center.x + Math.cos(angle + Math.PI / 2) * thickness / 2,
+      center.y + Math.sin(angle + Math.PI / 2) * thickness / 2,
+      center.z
+    );
+    const center2 = new Point(
+      center.x - Math.cos(angle + Math.PI / 2) * thickness / 2,
+      center.y - Math.sin(angle + Math.PI / 2) * thickness / 2,
+      center.z
+    );
+
+    const poly1 = this.#generateWheelSide(
+      center1, radius, angle, distance
+    );
+    const poly2 = this.#generateWheelSide(
+      center2, radius, angle, distance
+    );
+
+    const sides = [];
+    for (let i = 0; i < poly1.points.length; i++) {
+       sides.push(
+          new Polygon([
+             poly1.points[i],
+             poly1.points[(i + 1) % poly1.points.length],
+             poly2.points[(i + 1) % poly2.points.length],
+             poly2.points[i]
+          ])
+       );
+    }
+
+      return [poly1, poly2, ...sides];
+   }
+    #generateWheelSide(center, radius, angle, distance) {
+      const support = [
+         center,
+         new Point(
+            center.x + Math.cos(angle) * radius,
+            center.y + Math.sin(angle) * radius,
+            center.z
+         )
+      ];
+      const points = [];
+      for (let a = 0; a < Math.PI * 2; a += Math.PI / 8) {
+         const angle = a + distance / 20;
+         points.push(
+            new Point(
+               lerp(support[0].x, support[1].x, Math.cos(angle)),
+               lerp(support[0].y, support[1].y, Math.cos(angle)),
+               center.z + Math.sin(angle) * radius
+            )
+         );
+      }
+      return new Polygon(points);
+   }
 
   /**
   * @param {World} world
