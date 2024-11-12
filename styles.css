@@ -37,6 +37,10 @@ button:hover {
   background: black;
 }
 
+#cameraCanvas {
+  background-image: linear-gradient(#8cf, white 70%);
+}
+
 .miniMap {
   position: absolute;
   right: 20px;

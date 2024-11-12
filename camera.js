@@ -147,6 +147,12 @@ class Camera {
       10
     );
 
+    const carShadows = this.#filter(
+      world.cars.map(
+        c => new Polygon(c.polygon.map(p => new Point(p.x, p.y)))
+      )
+    );
+
     const roadPolys = this.#extrude(
       this.#filter(world.corridor.borders.map(s =>
         new Polygon([s.p1, s.p2])
@@ -154,7 +160,17 @@ class Camera {
       10
     )
 
-    return [...buildingPolys, ...carPolys, ...roadPolys];
+    for (const poly of carShadows) {
+      poly.fill = "rgba(150,150,150,1)";
+      poly.stroke = "rgba(0,0,0,0)";
+    }
+
+    for (const poly of buildingPolys) {
+      poly.fill = "rgba(150,150,150,0.2)";
+      poly.stroke = "rgba(150,150,150,0.2)";
+    }
+
+    return [...carShadows, ...buildingPolys, ...carPolys, ...roadPolys];
   }
 
   /**
@@ -171,8 +187,9 @@ class Camera {
 
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-    for (const poly of projPolys) {
-      poly.draw(ctx);
+    for (let i = 0; i < projPolys.length; i++) {
+      const { fill, stroke } = polys[i];
+      projPolys[i].draw(ctx, { fill, stroke });
     }
   }
 

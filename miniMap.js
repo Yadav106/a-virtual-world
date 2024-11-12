@@ -3,12 +3,14 @@ class MiniMap {
    * Represents a Mini Map
  * @param {Graph} graph - An instance of the Graph class.
  * @param {HTMLCanvasElement} canvas 
+ * @param {Car[]} cars 
  * @class
  */
-  constructor(canvas, graph, size) {
+  constructor(canvas, graph, size, cars) {
     this.canvas = canvas;
     this.graph = graph;
     this.size = size;
+    this.cars = cars;
 
     canvas.width = size;
     canvas.width = size;
@@ -21,7 +23,7 @@ class MiniMap {
   update(viewPoint) {
     this.ctx.clearRect(0, 0, this.size, this.size);
 
-    const scaler = 0.05;
+    const scaler = 0.1;
     /**
       * @type {Point}
       */
@@ -35,6 +37,16 @@ class MiniMap {
     for (const seg of this.graph.segments) {
       seg.draw(this.ctx, { width: 3 / scaler, color: "white" });
     }
+
+    for (const c of this.cars) {
+      this.ctx.beginPath();
+      this.ctx.fillStyle = "gray";
+      this.ctx.lineWidth = 2 / scaler;
+      this.ctx.arc(c.x, c.y, 5 / scaler, 0, Math.PI*2);
+      this.ctx.fill();
+      this.ctx.stroke();
+    }
+
     this.ctx.restore();
     new Point(this.size / 2, this.size / 2)
       .draw(this.ctx, { color: "blue", outline: true });

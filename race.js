@@ -20,9 +20,8 @@ statistics.style.width = rightPanelWidth + "px";
 statistics.style.height = window.innerHeight - rightPanelWidth - 60 + "px";
 
 const viewport = new Viewport(carCanvas, world.zoom, world.offset);
-const miniMap = new MiniMap(miniMapCanvas, world.graph, rightPanelWidth);
 
-const N = 1;
+const N = 10;
 const cars = generateCars(1, "KEYS").concat(generateCars(N, "AI"));
 
 let myCar = cars[0];
@@ -56,6 +55,11 @@ if (target) {
 } else {
   roadBorders = world.roadBorders.map(s => [s.p1, s.p2]);
 }
+
+const miniMapGraph = new Graph([], world.corridor.skeleton);
+const miniMap = new MiniMap(
+  miniMapCanvas, miniMapGraph, rightPanelWidth, cars
+);
 
 let frameCount = 0;
 let started = false;

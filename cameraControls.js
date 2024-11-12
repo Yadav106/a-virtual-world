@@ -48,7 +48,7 @@ class CameraControls {
     }
     const size = (leftMarker.radius + rightMarker.radius) / 2;
     if (size < this.expectedSize * 0.85) {
-      this.reverse = true;
+      this.reverse = false;
       this.forward = false;
     } else {
       this.forward = true;
