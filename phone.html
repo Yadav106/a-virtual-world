@@ -8,9 +8,13 @@
   </head>
   <body>
     <canvas id="carCanvas"></canvas>
-    <canvas id="cameraCanvas"></canvas>
-    <canvas id="miniMapCanvas" class="miniMap"></canvas>
-    <div id="statistics"></div>
+    <canvas id="cameraCanvas" style="
+      top:50%;
+      left:50%;
+      position: absolute;
+      "></canvas>
+    <canvas id="miniMapCanvas" class="miniMap" style="display:none"></canvas>
+    <div id="statistics" style="display:none"></div>
     <div id="counter"></div>
 
     <script src="./world/js/world.js"></script>
@@ -53,6 +57,7 @@
 
     <script src="./bestBrain.js"></script>
     <script src="./miniMap.js"></script>
+    <script src="./phoneControls.js"></script>
     <script src="./sound.js"></script>
     <script src="./camera.js"></script>
     <script src="./visualizer.js"></script>
@@ -62,5 +67,9 @@
     <script src="./controls.js"></script>
     <script src="./car.js"></script>
     <script src="./race.js"></script>
+
+    <script>
+      myCar.controls = new PhoneControls(cameraCanvas);
+    </script>
   </body>
 </html>

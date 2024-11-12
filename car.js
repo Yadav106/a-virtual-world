@@ -50,6 +50,8 @@ class Car {
       maskCtx.globalCompositeOperation = "destination-atop";
       maskCtx.drawImage(this.img, 0, 0, this.width, this.height);
     }
+
+    this.update([], []);
   }
 
   load(info) {
@@ -96,7 +98,6 @@ class Car {
   }
 
   #assessDamage(roadBorders, traffic) {
-    return false
     for (let i = 0; i < roadBorders.length; i++) {
       if (polysIntersect(this.polygon, roadBorders[i])) {
         return true;
@@ -141,7 +142,7 @@ class Car {
   }
 
   #move() {
-        if (this.controls.forward) {
+    if (this.controls.forward) {
       this.speed += this.acceleration;
     }
 
@@ -170,14 +171,19 @@ class Car {
     }
 
     if (this.speed != 0) {
-      const flip = this.speed > 0 ? 1 : -1;
-      if (this.controls.left) {
-        this.angle += 0.03 * flip;
+      if (this.controls.tilt) {
+        this.angle -= this.controls.tilt * 0.03;
+      } else {
+        const flip = this.speed > 0 ? 1 : -1;
+        if (this.controls.left) {
+          this.angle += 0.03 * flip;
+        }
+
+        if (this.controls.right) {
+          this.angle -= 0.03 * flip;
+        }
       }
 
-      if (this.controls.right) {
-        this.angle -= 0.03 * flip;
-      }
     }
 
     this.x -= Math.sin(this.angle) * this.speed;
