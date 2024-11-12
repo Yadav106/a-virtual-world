@@ -133,6 +133,151 @@ class Camera {
   }
 
   /**
+   * @param {Point} p1
+   * @param {Point} p2
+   */
+  #moveInward(p1, p2, percent = 0.1) {
+    const new_p1 = lerp2D(p1, p2, percent);
+    const new_p2 = lerp2D(p2, p1, percent);
+    p1.x = new_p1.x;
+    p1.y = new_p1.y;
+    p2.x = new_p2.x;
+    p2.y = new_p2.y;
+  }
+
+  /**
+   * @param {Polygon} poly
+   */
+  #extrudeCar(poly, height = 20, wheelRadius = 5) {
+    const frontRight = new Point(
+      poly.points[0].x,
+      poly.points[0].y
+    );
+
+    const frontLeft = new Point(
+      poly.points[1].x,
+      poly.points[1].y
+    );
+
+    const backLeft = new Point(
+      poly.points[2].x,
+      poly.points[2].y
+    );
+
+    const backRight = new Point(
+      poly.points[3].x,
+      poly.points[3].y
+    );
+
+    const middleLeft = average(frontLeft, backLeft);
+    const middleRight = average(frontRight, backRight);
+    const quarterFrontLeft = average(frontLeft, middleLeft);
+    const quarterBackLeft = average(backLeft, middleLeft);
+    const quarterBackRight = average(backRight, middleRight);
+    const quarterFrontRight = average(frontRight, middleRight);
+
+    const base = new Polygon([
+      frontLeft,
+      quarterFrontLeft,
+      middleLeft,
+      quarterBackLeft,
+      backLeft,
+      backRight,
+      quarterBackRight,
+      middleRight,
+      quarterFrontRight,
+      frontRight
+    ]);
+
+    for (const point of base.points) {
+      point.z -= wheelRadius; 
+    }
+
+    const ceiling = new Polygon(
+      base.points.map(p => new Point(p.x, p.y, -height))
+    );
+
+    const midline = new Polygon(
+      base.points.map(p => new Point(p.x, p.y, -height / 2))
+    );
+
+    const c_frontLeft = ceiling.points[0];
+    const c_quarterFrontLeft = ceiling.points[1];
+    const c_middleLeft = ceiling.points[2];
+    const c_quarterBackLeft = ceiling.points[3];
+    const c_backLeft = ceiling.points[4]
+    const c_backRight = ceiling.points[5];
+    const c_quarterBackRight = ceiling.points[6];
+    const c_middleRight = ceiling.points[7];
+    const c_quarterFrontRight = ceiling.points[8];
+    const c_frontRight = ceiling.points[9];
+
+    c_frontLeft.z += 5;
+    c_frontRight.z += 5;
+    c_quarterFrontLeft.z += 3;
+    c_quarterFrontRight.z += 3;
+    c_backLeft.z += 4;
+    c_backRight.z += 4;
+
+    this.#moveInward(c_frontLeft, c_frontRight);
+    this.#moveInward(c_quarterFrontLeft, c_quarterFrontRight);
+    this.#moveInward(c_middleLeft, c_middleRight);
+    this.#moveInward(c_quarterBackLeft, c_quarterBackRight);
+    this.#moveInward(c_backLeft, c_backRight);
+
+    const sides = [];
+    for (let i = 0; i < base.points.length; i++) {
+      sides.push(new Polygon([
+        base.points[i],
+        base.points[(i+1) % base.points.length],
+        midline.points[(i+1) % midline.points.length],
+        midline.points[i]
+      ]))
+    }
+
+    for (let i = 0; i < base.points.length; i++) {
+      sides.push(new Polygon([
+        midline.points[i],
+        midline.points[(i+1) % midline.points.length],
+        ceiling.points[(i+1) % ceiling.points.length],
+        ceiling.points[i]
+      ]))
+    }
+
+    const ceilingParts = [];
+
+    ceilingParts.push(new Polygon([
+      c_frontLeft,
+      c_quarterFrontLeft,
+      c_quarterFrontRight,
+      c_frontRight
+    ]));
+
+    ceilingParts.push(new Polygon([
+      c_quarterFrontLeft,
+      c_middleLeft,
+      c_middleRight,
+      c_quarterFrontRight
+    ]));
+
+    ceilingParts.push(new Polygon([
+      c_middleLeft,
+      c_quarterBackLeft,
+      c_quarterBackRight,
+      c_middleRight
+    ]));
+
+    ceilingParts.push(new Polygon([
+      c_quarterBackLeft,
+      c_backLeft,
+      c_backRight,
+      c_quarterBackRight
+    ]));
+
+    return [...sides, ...ceilingParts];
+  }
+
+  /**
   * @param {World} world
   */
   #getPolys(world) {
@@ -140,11 +285,10 @@ class Camera {
       this.#filter(world.buildings.map(b => b.base)), 150
     );
 
-    const carPolys = this.#extrude(
+    const carPolys = this.#extrudeCar(
       this.#filter( 
         [new Polygon(world.bestCar.polygon.map(p => new Point(p.x, p.y)))]
-      ),
-      10
+      )[0]
     );
 
     const carShadows = this.#filter(
